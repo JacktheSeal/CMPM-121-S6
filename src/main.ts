@@ -21,10 +21,32 @@ const state = {
   lastTick: performance.now(),
 };
 
-// The first machine: a tabletop Pong cabinet.
+// Every machine gets 15% pricier each time one is installed.
+const COST_GROWTH = 1.15;
+
+// Machines, one declaration at a time. Each has a base price, the income
+// it generates, and how many are installed.
 const PONG = {
   cost: 15,
   creditsPerSecond: 0.1,
+  owned: 0,
+};
+
+const BLASTER = {
+  cost: 100,
+  creditsPerSecond: 1,
+  owned: 0,
+};
+
+const STACKER = {
+  cost: 1100,
+  creditsPerSecond: 8,
+  owned: 0,
+};
+
+const FIGHTER = {
+  cost: 12000,
+  creditsPerSecond: 47,
   owned: 0,
 };
 
@@ -72,18 +94,46 @@ function formatCredits(amount: number): string {
 }
 
 function productionPerSecond(): number {
-  return WALK_IN_RATE + PONG.owned * PONG.creditsPerSecond;
+  return WALK_IN_RATE +
+    PONG.owned * PONG.creditsPerSecond +
+    BLASTER.owned * BLASTER.creditsPerSecond +
+    STACKER.owned * STACKER.creditsPerSecond +
+    FIGHTER.owned * FIGHTER.creditsPerSecond;
 }
 
 function render() {
   counter.textContent = `${formatCredits(state.credits)} credits in the till`;
   rate.textContent = `+${formatCredits(productionPerSecond())} credits/s`;
 
-  // Machine row: current price, install count, and affordability.
-  pongBuy.textContent = `${formatCredits(PONG.cost)} credits`;
-  pongBuy.disabled = state.credits < PONG.cost;
+  // One bespoke block per machine: current price (base price times the
+  // growth factor for every installed copy), install count, and
+  // affordability.
+  const pongPrice = PONG.cost * Math.pow(COST_GROWTH, PONG.owned);
+  pongBuy.textContent = `${formatCredits(pongPrice)} credits`;
+  pongBuy.disabled = state.credits < pongPrice;
   pongMeta.textContent = `x${PONG.owned} installed · +${
     formatCredits(PONG.creditsPerSecond)
+  } credits/s each`;
+
+  const blasterPrice = BLASTER.cost * Math.pow(COST_GROWTH, BLASTER.owned);
+  blasterBuy.textContent = `${formatCredits(blasterPrice)} credits`;
+  blasterBuy.disabled = state.credits < blasterPrice;
+  blasterMeta.textContent = `x${BLASTER.owned} installed · +${
+    formatCredits(BLASTER.creditsPerSecond)
+  } credits/s each`;
+
+  const stackerPrice = STACKER.cost * Math.pow(COST_GROWTH, STACKER.owned);
+  stackerBuy.textContent = `${formatCredits(stackerPrice)} credits`;
+  stackerBuy.disabled = state.credits < stackerPrice;
+  stackerMeta.textContent = `x${STACKER.owned} installed · +${
+    formatCredits(STACKER.creditsPerSecond)
+  } credits/s each`;
+
+  const fighterPrice = FIGHTER.cost * Math.pow(COST_GROWTH, FIGHTER.owned);
+  fighterBuy.textContent = `${formatCredits(fighterPrice)} credits`;
+  fighterBuy.disabled = state.credits < fighterPrice;
+  fighterMeta.textContent = `x${FIGHTER.owned} installed · +${
+    formatCredits(FIGHTER.creditsPerSecond)
   } credits/s each`;
 }
 
@@ -121,6 +171,7 @@ machinesSection.className = "machines";
 const machinesHeading = document.createElement("h2");
 machinesHeading.textContent = "Machines";
 
+// Tabletop Pong row.
 const pongRow = document.createElement("div");
 pongRow.className = "machine";
 const pongInfo = document.createElement("div");
@@ -133,15 +184,90 @@ pongMeta.className = "machine-meta";
 const pongBuy = document.createElement("button");
 pongBuy.type = "button";
 pongBuy.className = "buy-button";
-
 pongInfo.append(pongName, pongMeta);
 pongRow.append(pongInfo, pongBuy);
 machinesSection.append(machinesHeading, pongRow);
 
+// Space Blaster row.
+const blasterRow = document.createElement("div");
+blasterRow.className = "machine";
+const blasterInfo = document.createElement("div");
+blasterInfo.className = "machine-info";
+const blasterName = document.createElement("span");
+blasterName.className = "machine-name";
+blasterName.textContent = "Space Blaster";
+const blasterMeta = document.createElement("span");
+blasterMeta.className = "machine-meta";
+const blasterBuy = document.createElement("button");
+blasterBuy.type = "button";
+blasterBuy.className = "buy-button";
+blasterInfo.append(blasterName, blasterMeta);
+blasterRow.append(blasterInfo, blasterBuy);
+machinesSection.append(blasterRow);
+
+// Block Stacker row.
+const stackerRow = document.createElement("div");
+stackerRow.className = "machine";
+const stackerInfo = document.createElement("div");
+stackerInfo.className = "machine-info";
+const stackerName = document.createElement("span");
+stackerName.className = "machine-name";
+stackerName.textContent = "Block Stacker";
+const stackerMeta = document.createElement("span");
+stackerMeta.className = "machine-meta";
+const stackerBuy = document.createElement("button");
+stackerBuy.type = "button";
+stackerBuy.className = "buy-button";
+stackerInfo.append(stackerName, stackerMeta);
+stackerRow.append(stackerInfo, stackerBuy);
+machinesSection.append(stackerRow);
+
+// Fighting Cabinet row.
+const fighterRow = document.createElement("div");
+fighterRow.className = "machine";
+const fighterInfo = document.createElement("div");
+fighterInfo.className = "machine-info";
+const fighterName = document.createElement("span");
+fighterName.className = "machine-name";
+fighterName.textContent = "Fighting Cabinet";
+const fighterMeta = document.createElement("span");
+fighterMeta.className = "machine-meta";
+const fighterBuy = document.createElement("button");
+fighterBuy.type = "button";
+fighterBuy.className = "buy-button";
+fighterInfo.append(fighterName, fighterMeta);
+fighterRow.append(fighterInfo, fighterBuy);
+machinesSection.append(fighterRow);
+
 pongBuy.addEventListener("click", () => {
-  if (state.credits < PONG.cost) return; // never buy on credit
-  state.credits -= PONG.cost;
+  const price = PONG.cost * Math.pow(COST_GROWTH, PONG.owned);
+  if (state.credits < price) return; // never buy on credit
+  state.credits -= price;
   PONG.owned += 1;
+  render();
+});
+
+blasterBuy.addEventListener("click", () => {
+  const price = BLASTER.cost * Math.pow(COST_GROWTH, BLASTER.owned);
+  if (state.credits < price) return; // never buy on credit
+  state.credits -= price;
+  BLASTER.owned += 1;
+  render();
+});
+
+stackerBuy.addEventListener("click", () => {
+  const price = STACKER.cost * Math.pow(COST_GROWTH, STACKER.owned);
+  if (state.credits < price) return; // never buy on credit
+  state.credits -= price;
+  STACKER.owned += 1;
+  render();
+});
+
+fighterBuy.addEventListener("click", () => {
+  const price = FIGHTER.cost * Math.pow(COST_GROWTH, FIGHTER.owned);
+  if (state.credits < price) return; // never buy on credit
+  state.credits -= price;
+  FIGHTER.owned += 1;
   render();
 });
 
