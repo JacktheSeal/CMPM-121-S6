@@ -15,7 +15,7 @@ export const MACHINES: Machine[] = [
     name: "Tabletop Pong",
     description: "Two paddles, one dot, endless waiting.",
     baseCost: 15,
-    creditsPerSecond: 0.1,
+    creditsPerSecond: 0.2,
     owned: 0,
   },
   {
@@ -23,7 +23,7 @@ export const MACHINES: Machine[] = [
     name: "Space Blaster",
     description: "Every hit ship drops a fresh pile of coins.",
     baseCost: 100,
-    creditsPerSecond: 1,
+    creditsPerSecond: 1.2,
     owned: 0,
   },
   {
@@ -31,7 +31,7 @@ export const MACHINES: Machine[] = [
     name: "Block Stacker",
     description: "Claw machines for people who like crying.",
     baseCost: 1100,
-    creditsPerSecond: 8,
+    creditsPerSecond: 11,
     owned: 0,
   },
   {
@@ -39,7 +39,7 @@ export const MACHINES: Machine[] = [
     name: "Fighting Cabinet",
     description: "Two players, one loser, zero mercy.",
     baseCost: 12000,
-    creditsPerSecond: 47,
+    creditsPerSecond: 120,
     owned: 0,
   },
   {
@@ -47,7 +47,7 @@ export const MACHINES: Machine[] = [
     name: "Rhythm Machine",
     description: "Full-body dance cabinets. Full pockets required.",
     baseCost: 130000,
-    creditsPerSecond: 325,
+    creditsPerSecond: 1200,
     owned: 0,
   },
 ];

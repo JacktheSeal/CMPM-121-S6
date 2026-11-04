@@ -2,7 +2,7 @@ import type { Machine } from "./machines.ts";
 
 // Spare change from walk-in customers: the arcade earns a little even
 // before any machines are installed.
-export const WALK_IN_RATE = 0.25; // credits per second
+export const WALK_IN_RATE = 0.5; // credits per second
 
 // Every machine gets 15% pricier each time one is installed.
 export const COST_GROWTH = 1.15;
