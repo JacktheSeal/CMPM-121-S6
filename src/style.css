@@ -76,6 +76,75 @@ body {
   font-size: 1.05rem;
 }
 
+/* ---- machines ---- */
+
+.machines {
+  margin: 2.5rem auto 0;
+  max-width: 30rem;
+  text-align: left;
+}
+
+.machines h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--arcade-muted);
+}
+
+.machine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border: 0.1rem solid var(--arcade-panel-edge);
+  border-radius: 0.6rem;
+  background: var(--arcade-panel);
+}
+
+.machine + .machine {
+  margin-top: 0.6rem;
+}
+
+.machine-info {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.machine-name {
+  font-weight: 700;
+}
+
+.machine-meta {
+  color: var(--arcade-muted);
+  font-size: 0.9rem;
+}
+
+.buy-button {
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid var(--arcade-teal);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--arcade-teal);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.buy-button:hover:not(:disabled) {
+  box-shadow: 0 0 0.75rem color-mix(in srgb, var(--arcade-teal) 45%,
+    transparent);
+}
+
+.buy-button:disabled {
+  border-color: var(--arcade-panel-edge);
+  color: var(--arcade-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* ---- coin button ---- */
 
 .coin-slot {

@@ -21,6 +21,13 @@ const state = {
   lastTick: performance.now(),
 };
 
+// The first machine: a tabletop Pong cabinet.
+const PONG = {
+  cost: 15,
+  creditsPerSecond: 0.1,
+  owned: 0,
+};
+
 /* ---- header ---- */
 
 const header = document.createElement("header");
@@ -64,9 +71,20 @@ function formatCredits(amount: number): string {
   return `${value.toFixed(2)}${units[unitIndex]}`;
 }
 
+function productionPerSecond(): number {
+  return WALK_IN_RATE + PONG.owned * PONG.creditsPerSecond;
+}
+
 function render() {
   counter.textContent = `${formatCredits(state.credits)} credits in the till`;
-  rate.textContent = `+${formatCredits(WALK_IN_RATE)} credits/s from walk-ins`;
+  rate.textContent = `+${formatCredits(productionPerSecond())} credits/s`;
+
+  // Machine row: current price, install count, and affordability.
+  pongBuy.textContent = `${formatCredits(PONG.cost)} credits`;
+  pongBuy.disabled = state.credits < PONG.cost;
+  pongMeta.textContent = `x${PONG.owned} installed · +${
+    formatCredits(PONG.creditsPerSecond)
+  } credits/s each`;
 }
 
 /* ---- coin button ---- */
@@ -95,7 +113,39 @@ coinButton.addEventListener("click", () => {
 
 coinSlot.append(coinButton);
 
-app.append(header, counter, coinSlot, rate);
+/* ---- machines ---- */
+
+const machinesSection = document.createElement("section");
+machinesSection.className = "machines";
+
+const machinesHeading = document.createElement("h2");
+machinesHeading.textContent = "Machines";
+
+const pongRow = document.createElement("div");
+pongRow.className = "machine";
+const pongInfo = document.createElement("div");
+pongInfo.className = "machine-info";
+const pongName = document.createElement("span");
+pongName.className = "machine-name";
+pongName.textContent = "Tabletop Pong";
+const pongMeta = document.createElement("span");
+pongMeta.className = "machine-meta";
+const pongBuy = document.createElement("button");
+pongBuy.type = "button";
+pongBuy.className = "buy-button";
+
+pongInfo.append(pongName, pongMeta);
+pongRow.append(pongInfo, pongBuy);
+machinesSection.append(machinesHeading, pongRow);
+
+pongBuy.addEventListener("click", () => {
+  if (state.credits < PONG.cost) return; // never buy on credit
+  state.credits -= PONG.cost;
+  PONG.owned += 1;
+  render();
+});
+
+app.append(header, counter, coinSlot, rate, machinesSection);
 render();
 
 // Growth runs on requestAnimationFrame but is driven by elapsed *seconds*,
@@ -103,7 +153,7 @@ render();
 function frame(now: number) {
   const elapsedSeconds = (now - state.lastTick) / 1000;
   state.lastTick = now;
-  state.credits += WALK_IN_RATE * elapsedSeconds;
+  state.credits += productionPerSecond() * elapsedSeconds;
   render();
   requestAnimationFrame(frame);
 }
