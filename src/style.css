@@ -1,0 +1,122 @@
+/*
+ * INSERT COIN — an arcade tycoon.
+ * Palette: deep midnight walls, neon pink/teal accents, warm coin gold.
+ */
+
+:root {
+  --arcade-bg: #12142e;
+  --arcade-panel: #1a1c3a;
+  --arcade-panel-edge: #2e3166;
+  --arcade-text: #e8e9f3;
+  --arcade-muted: #9aa0b8;
+  --arcade-pink: #e94f6a;
+  --arcade-teal: #4fd1c5;
+  --arcade-gold: #f2c14e;
+  --arcade-screen: #0b0e24;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120rem 60rem at 50% -20%, #232652, transparent),
+    var(--arcade-bg);
+  color: var(--arcade-text);
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+#app {
+  width: min(52rem, 100%);
+  padding: 1.5rem 1rem 3rem;
+  text-align: center;
+}
+
+/* ---- header ---- */
+
+.site-header h1 {
+  margin: 0.25rem 0 0;
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  letter-spacing: 0.12em;
+  color: var(--arcade-gold);
+  text-shadow:
+    0 0 0.4rem color-mix(in srgb, var(--arcade-gold) 60%, transparent),
+    0 0 1.5rem color-mix(in srgb, var(--arcade-pink) 40%, transparent);
+}
+
+.cabinet {
+  width: 7rem;
+  height: auto;
+  filter: drop-shadow(0 0.5rem 1.5rem #000a);
+}
+
+.subtitle {
+  margin: 0.25rem auto 0;
+  max-width: 28rem;
+  color: var(--arcade-muted);
+}
+
+/* ---- money display ---- */
+
+.quarters {
+  margin: 1.5rem 0 0.25rem;
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- coin button ---- */
+
+.coin-slot {
+  position: relative;
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.coin-button {
+  padding: 1rem 2.5rem;
+  border: 0.15rem solid var(--arcade-gold);
+  border-radius: 999px;
+  background: linear-gradient(#2a2d5a, #1a1c3a);
+  color: var(--arcade-gold);
+  font: inherit;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.coin-button:hover {
+  box-shadow: 0 0 1rem color-mix(in srgb, var(--arcade-gold) 50%, transparent);
+}
+
+.coin-button:active {
+  transform: translateY(0.15rem) scale(0.98);
+}
+
+.floater {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  color: var(--arcade-gold);
+  font-weight: 700;
+  pointer-events: none;
+  animation: float-up 0.8s ease-out forwards;
+}
+
+@keyframes float-up {
+  from {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -3rem);
+  }
+}
