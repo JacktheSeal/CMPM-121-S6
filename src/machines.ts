@@ -42,4 +42,12 @@ export const MACHINES: Machine[] = [
     creditsPerSecond: 47,
     owned: 0,
   },
+  {
+    id: "rhythm",
+    name: "Rhythm Machine",
+    description: "Full-body dance cabinets. Full pockets required.",
+    baseCost: 130000,
+    creditsPerSecond: 325,
+    owned: 0,
+  },
 ];
