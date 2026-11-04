@@ -70,6 +70,12 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+.rate {
+  margin: 0;
+  color: var(--arcade-teal);
+  font-size: 1.05rem;
+}
+
 /* ---- coin button ---- */
 
 .coin-slot {

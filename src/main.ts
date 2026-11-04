@@ -11,9 +11,14 @@ import "./style.css";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 
+// Spare change from walk-in customers: the arcade earns a little even
+// before any machines are installed.
+const WALK_IN_RATE = 0.25; // credits per second
+
 // The whole game world: how many credits are sitting in the till.
 const state = {
   credits: 0,
+  lastTick: performance.now(),
 };
 
 /* ---- header ---- */
@@ -41,8 +46,27 @@ header.append(cabinet, title, subtitle);
 const counter = document.createElement("p");
 counter.className = "quarters";
 
+const rate = document.createElement("p");
+rate.className = "rate";
+
+function formatCredits(amount: number): string {
+  // One decimal keeps slow growth visible; large totals go compact.
+  if (amount < 1000) {
+    return amount.toFixed(1);
+  }
+  const units = ["K", "M", "B", "T"] as const;
+  let value = amount;
+  let unitIndex = -1;
+  while (value >= 1000 && unitIndex < units.length - 1) {
+    value /= 1000;
+    unitIndex += 1;
+  }
+  return `${value.toFixed(2)}${units[unitIndex]}`;
+}
+
 function render() {
-  counter.textContent = `${Math.floor(state.credits)} credits in the till`;
+  counter.textContent = `${formatCredits(state.credits)} credits in the till`;
+  rate.textContent = `+${formatCredits(WALK_IN_RATE)} credits/s from walk-ins`;
 }
 
 /* ---- coin button ---- */
@@ -71,5 +95,16 @@ coinButton.addEventListener("click", () => {
 
 coinSlot.append(coinButton);
 
-app.append(header, counter, coinSlot);
+app.append(header, counter, coinSlot, rate);
 render();
+
+// Growth runs on requestAnimationFrame but is driven by elapsed *seconds*,
+// so income accumulates at the same pace on any display.
+function frame(now: number) {
+  const elapsedSeconds = (now - state.lastTick) / 1000;
+  state.lastTick = now;
+  state.credits += WALK_IN_RATE * elapsedSeconds;
+  render();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
