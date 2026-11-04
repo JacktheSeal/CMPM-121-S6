@@ -13,7 +13,7 @@ import {
 } from "./engine.ts";
 import { formatCredits } from "./format.ts";
 import { MACHINES } from "./machines.ts";
-import { initView, spawnFloater } from "./render.ts";
+import { initView, spawnFloater, updateFleet } from "./render.ts";
 
 const app = document.querySelector<HTMLElement>("#app")!;
 
@@ -36,6 +36,7 @@ function render() {
     row.meta.textContent = `x${machine.owned} installed · +${
       formatCredits(machine.creditsPerSecond)
     } credits/s each`;
+    updateFleet(row.fleet, machine.owned);
   }
 }
 

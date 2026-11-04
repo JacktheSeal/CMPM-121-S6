@@ -7,9 +7,14 @@ import cabinetUrl from "./assets/cabinet.svg?no-inline";
 import { MACHINES } from "./machines.ts";
 import type { Machine } from "./machines.ts";
 
+// Cabinet slots shown per machine row; past this the exact count moves
+// into a badge.
+const FLEET_SLOTS = 10;
+
 export interface MachineRow {
   row: HTMLElement;
   meta: HTMLSpanElement;
+  fleet: HTMLDivElement;
   buy: HTMLButtonElement;
 }
 
@@ -30,6 +35,31 @@ export function spawnFloater(slot: HTMLElement): void {
   slot.append(floater);
 }
 
+// Rebuilds a machine's fleet strip only when its count has changed; this
+// runs every frame, so it must stay cheap when nothing was bought.
+export function updateFleet(fleet: HTMLDivElement, owned: number): void {
+  if (fleet.dataset.owned === String(owned)) return;
+  fleet.dataset.owned = String(owned);
+
+  // Ghost cabinets mark the slots still waiting to be filled; once the
+  // fleet outgrows the strip, the exact count moves into a badge.
+  const badgeCount = owned >= FLEET_SLOTS ? owned : 0;
+  const filled = Math.min(owned, FLEET_SLOTS - (badgeCount ? 1 : 0));
+
+  fleet.replaceChildren();
+  for (let index = 0; index < FLEET_SLOTS; index++) {
+    const slot = document.createElement("span");
+    slot.className = index < filled ? "slot" : "slot empty";
+    fleet.append(slot);
+  }
+  if (badgeCount) {
+    const badge = document.createElement("span");
+    badge.className = "slot-badge";
+    badge.textContent = `×${badgeCount}`;
+    fleet.append(badge);
+  }
+}
+
 function createMachineRow(machine: Machine): MachineRow {
   const row = document.createElement("div");
   row.className = "machine";
@@ -48,14 +78,21 @@ function createMachineRow(machine: Machine): MachineRow {
   const meta = document.createElement("span");
   meta.className = "machine-meta";
 
+  // The fleet strip doubles as a visual inventory: one tinted cabinet
+  // silhouette per installed machine, ghosts for the empty slots.
+  const fleet = document.createElement("div");
+  fleet.className = "fleet";
+  fleet.style.setProperty("--accent", machine.accent);
+  fleet.setAttribute("aria-hidden", "true");
+
   const buy = document.createElement("button");
   buy.type = "button";
   buy.className = "buy-button";
 
-  info.append(name, desc, meta);
+  info.append(name, desc, meta, fleet);
   row.append(info, buy);
 
-  return { row, meta, buy };
+  return { row, meta, fleet, buy };
 }
 
 export function initView(root: HTMLElement): View {
