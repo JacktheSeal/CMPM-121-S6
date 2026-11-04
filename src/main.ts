@@ -30,24 +30,28 @@ const PONG = {
   cost: 15,
   creditsPerSecond: 0.1,
   owned: 0,
+  description: "Two paddles, one dot, endless waiting.",
 };
 
 const BLASTER = {
   cost: 100,
   creditsPerSecond: 1,
   owned: 0,
+  description: "Every hit ship drops a fresh pile of coins.",
 };
 
 const STACKER = {
   cost: 1100,
   creditsPerSecond: 8,
   owned: 0,
+  description: "Claw machines for people who like crying.",
 };
 
 const FIGHTER = {
   cost: 12000,
   creditsPerSecond: 47,
   owned: 0,
+  description: "Two players, one loser, zero mercy.",
 };
 
 /* ---- header ---- */
@@ -179,12 +183,15 @@ pongInfo.className = "machine-info";
 const pongName = document.createElement("span");
 pongName.className = "machine-name";
 pongName.textContent = "Tabletop Pong";
+const pongDesc = document.createElement("span");
+pongDesc.className = "machine-desc";
+pongDesc.textContent = PONG.description;
 const pongMeta = document.createElement("span");
 pongMeta.className = "machine-meta";
 const pongBuy = document.createElement("button");
 pongBuy.type = "button";
 pongBuy.className = "buy-button";
-pongInfo.append(pongName, pongMeta);
+pongInfo.append(pongName, pongDesc, pongMeta);
 pongRow.append(pongInfo, pongBuy);
 machinesSection.append(machinesHeading, pongRow);
 
@@ -196,12 +203,15 @@ blasterInfo.className = "machine-info";
 const blasterName = document.createElement("span");
 blasterName.className = "machine-name";
 blasterName.textContent = "Space Blaster";
+const blasterDesc = document.createElement("span");
+blasterDesc.className = "machine-desc";
+blasterDesc.textContent = BLASTER.description;
 const blasterMeta = document.createElement("span");
 blasterMeta.className = "machine-meta";
 const blasterBuy = document.createElement("button");
 blasterBuy.type = "button";
 blasterBuy.className = "buy-button";
-blasterInfo.append(blasterName, blasterMeta);
+blasterInfo.append(blasterName, blasterDesc, blasterMeta);
 blasterRow.append(blasterInfo, blasterBuy);
 machinesSection.append(blasterRow);
 
@@ -213,12 +223,15 @@ stackerInfo.className = "machine-info";
 const stackerName = document.createElement("span");
 stackerName.className = "machine-name";
 stackerName.textContent = "Block Stacker";
+const stackerDesc = document.createElement("span");
+stackerDesc.className = "machine-desc";
+stackerDesc.textContent = STACKER.description;
 const stackerMeta = document.createElement("span");
 stackerMeta.className = "machine-meta";
 const stackerBuy = document.createElement("button");
 stackerBuy.type = "button";
 stackerBuy.className = "buy-button";
-stackerInfo.append(stackerName, stackerMeta);
+stackerInfo.append(stackerName, stackerDesc, stackerMeta);
 stackerRow.append(stackerInfo, stackerBuy);
 machinesSection.append(stackerRow);
 
@@ -230,12 +243,15 @@ fighterInfo.className = "machine-info";
 const fighterName = document.createElement("span");
 fighterName.className = "machine-name";
 fighterName.textContent = "Fighting Cabinet";
+const fighterDesc = document.createElement("span");
+fighterDesc.className = "machine-desc";
+fighterDesc.textContent = FIGHTER.description;
 const fighterMeta = document.createElement("span");
 fighterMeta.className = "machine-meta";
 const fighterBuy = document.createElement("button");
 fighterBuy.type = "button";
 fighterBuy.className = "buy-button";
-fighterInfo.append(fighterName, fighterMeta);
+fighterInfo.append(fighterName, fighterDesc, fighterMeta);
 fighterRow.append(fighterInfo, fighterBuy);
 machinesSection.append(fighterRow);
 
@@ -271,7 +287,12 @@ fighterBuy.addEventListener("click", () => {
   render();
 });
 
-app.append(header, counter, coinSlot, rate, machinesSection);
+const footer = document.createElement("footer");
+footer.className = "site-footer";
+footer.textContent =
+  "Every machine takes quarters. Every quarter comes back with interest.";
+
+app.append(header, counter, coinSlot, rate, machinesSection, footer);
 render();
 
 // Growth runs on requestAnimationFrame but is driven by elapsed *seconds*,
